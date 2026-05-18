@@ -100,14 +100,15 @@
       min-height: 100vh; padding: 110px 60px 80px;
       position: relative; z-index: 1;
       display: flex; flex-direction: column; justify-content: center;
+      contain: content; /* Optimasi peramban agar tidak memicu layout-shift global */
     }
     section + section { border-top: 1px solid rgba(90,140,255,0.1); }
     section:nth-child(even) { background: rgba(232,238,255,0.35); }
 
     /* REVEAL ON SCROLL */
-    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+    .reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; will-change: transform, opacity; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
-    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.65s ease, transform 0.65s ease; }
+    .reveal-left { opacity: 0; transform: translateX(-40px); transition: opacity 0.65s ease, transform 0.65s ease; will-change: transform, opacity; }
     .reveal-left.visible { opacity: 1; transform: translateX(0); }
 
     /* HOME */
@@ -146,6 +147,16 @@
       background: linear-gradient(135deg, var(--navy) 30%, var(--blue-light));
       -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 20px;
     }
+    
+    /* PERBAIKAN: Memberikan kontainer stabil untuk efek mengetik agar teks tidak bergeser */
+    .typed-container {
+      display: inline-block;
+      min-width: 250px; 
+      text-align: left;
+    }
+    .typed::after { content: '|'; animation: blink 0.8s infinite; color: var(--blue-mid); }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+
     .home-right p {
       font-size: 0.97rem; line-height: 1.85; color: var(--text-sub);
       max-width: 500px; margin-bottom: 32px;
@@ -160,8 +171,7 @@
       background: var(--blue-mid); color: #fff;
       box-shadow: 0 0 24px rgba(58,106,232,0.35);
     }
-    .typed::after { content: '|'; animation: blink 0.8s infinite; color: var(--blue-mid); }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
+    
     .scroll-arrow {
       position: absolute; bottom: 32px; left: 50%; transform: translateX(-50%);
       display: flex; flex-direction: column; align-items: center; gap: 4px;
@@ -287,6 +297,7 @@
       section { padding: 88px 22px 60px; }
       #home { flex-direction: column; align-items: center; text-align: center; gap: 30px; }
       .home-right h1 { font-size: 1.75rem; }
+      .typed-container { min-width: 100%; text-align: center; display: block; }
       .home-right p { margin: 0 auto 28px; }
       .bio-grid { grid-template-columns: 1fr; max-width: 100%; }
       .hoby-grid { flex-direction: column; align-items: center; }
@@ -300,7 +311,6 @@
 
   <canvas id="starCanvas"></canvas>
 
-  <!-- NAVBAR -->
   <nav>
     <div class="nav-logo">⬡ Ikbal Kabil</div>
     <div class="menu-wrap">
@@ -322,20 +332,16 @@
     </div>
   </nav>
 
-  <!-- HOME -->
   <section id="home">
     <div class="home-left">
       <div class="profile-frame">
-        <div class="profile-placeholder">
-          <i class="fas fa-user"></i>
-          <span>Taruh foto profil kamu di sini (9:16)</span>
-        </div>
+        <img src="IMG-20260518-WA0008.jpg" alt="Profile">
       </div>
       <div class="profile-name">Ikbal Kabil</div>
     </div>
     <div class="home-right">
       <div class="greeting">✦ HALO DUNIA ✦</div>
-      <h1>Saya <span class="typed" id="typedText"></span></h1>
+      <h1>Saya <span class="typed-container"><span class="typed" id="typedText"></span></span></h1>
       <p>Perkenalkan, saya adalah seseorang yang penuh semangat dan selalu ingin berkembang. Saya percaya bahwa setiap pengalaman adalah pelajaran berharga yang membentuk siapa diri kita. Mari kenali saya lebih jauh!</p>
       <a href="#tentang" class="btn-primary">KENALI SAYA →</a>
     </div>
@@ -345,62 +351,57 @@
     </div>
   </section>
 
-  <!-- TENTANG -->
   <section id="tentang">
     <div class="reveal">
       <div class="section-title">Tentang Saya</div>
       <div class="section-line"></div>
       <p class="tentang-text" style="margin:0 auto;">
-        Halo! Nama saya <strong style="color:var(--blue)">Nama Kamu</strong>, seseorang yang passionate di bidang teknologi dan selalu antusias untuk belajar hal-hal baru. Saya percaya bahwa kolaborasi dan komunikasi yang baik adalah kunci kesuksesan dalam apapun yang kita kerjakan.
+        Halo! Nama saya <strong style="color:var(--blue)">Ikbal Kabil</strong>, Ikbal Kabil adalah seorang pelajar aktif dan organisator muda asal Barru, Sulawesi Selatan, yang saat ini dipercaya mengemban amanah sebagai Ketua Umum OSIS di UPT SMKN 2 Barru untuk periode masa bakti 2025–2026. Di lingkungan sekolahnya, ia menempuh pendidikan dengan fokus keahlian di jurusan Teknik Komputer dan Jaringan (TKJ). Sebagai seorang pemimpin ormas kesiswaan,
         <br/><br/>
-        Dengan latar belakang pendidikan yang kuat dan pengalaman di berbagai bidang, saya selalu berusaha memberikan yang terbaik dalam setiap pekerjaan yang saya lakukan. Saya adalah pribadi yang adaptif, pekerja keras, dan selalu memiliki semangat untuk terus bertumbuh.
+         Ikbal dikenal aktif dalam mengoordinasikan berbagai program kerja sekolah serta kerap berpartisipasi dalam berbagai kegiatan kepemudaan guna mengembangkan kapasitas kepemimpinan di tingkat pelajar. Selain memiliki jiwa kepemimpinan yang kuat, 
         <br/><br/>
-        Di luar pekerjaan, saya aktif dalam kegiatan sosial dan selalu berusaha memberikan kontribusi positif bagi lingkungan sekitar.
+        ia juga dikenal sebagai sosok yang religius, bangga akan identitas daerahnya, serta aktif membagikan perjalanan kesehariannya sebagai kreator digital melalui akun Instagram Pribadi Ikbal Kabil. Informasi dan dokumentasi mengenai berbagai program kerja yang dipimpinnya juga dapat dipantau secara langsung melalui Akun Instagram Resmi OSIS SMKN 2 Barru
       </p>
     </div>
   </section>
 
-  <!-- BIODATA -->
   <section id="biodata">
     <div class="reveal">
       <div class="section-title">Biodata</div>
       <div class="section-line"></div>
     </div>
     <div class="bio-grid">
-      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-user-astronaut"></i></div><div class="bio-label">Nama Lengkap</div><div class="bio-value">Nama Lengkap Kamu</div></div>
-      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-map-marker-alt"></i></div><div class="bio-label">Tempat, Tanggal Lahir</div><div class="bio-value">Kota, DD Bulan YYYY</div></div>
-      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-graduation-cap"></i></div><div class="bio-label">Pendidikan Terakhir</div><div class="bio-value">SMA / SMK / D3 / S1</div></div>
-      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-briefcase"></i></div><div class="bio-label">Pekerjaan</div><div class="bio-value">Pekerjaan / Profesi Kamu</div></div>
+      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-user-astronaut"></i></div><div class="bio-label">Nama Lengkap</div><div class="bio-value">Ikbal Kabil</div></div>
+      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-map-marker-alt"></i></div><div class="bio-label">Tempat, Tanggal Lahir</div><div class="bio-value">Sentani, 17 Februari 2009</div></div>
+      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-graduation-cap"></i></div><div class="bio-label">Pendidikan Terakhir</div><div class="bio-value">SD / SMP / SMK</div></div>
+      <div class="bio-card reveal"><div class="bio-icon"><i class="fas fa-briefcase"></i></div><div class="bio-label">Pekerjaan</div><div class="bio-value">Seorang Pelajar</div></div>
     </div>
   </section>
 
-  <!-- PENGALAMAN -->
   <section id="pengalaman">
     <div class="reveal">
       <div class="section-title">Pengalaman</div>
       <div class="section-line"></div>
     </div>
     <div class="exp-list">
-      <div class="exp-card reveal-left"><div class="exp-number">01</div><div class="exp-content"><h3>Nama Pengalaman Pertama</h3><p>Deskripsi singkat pengalaman kamu di sini. Ceritakan apa yang kamu lakukan dan apa yang kamu pelajari dari pengalaman ini.</p><span class="exp-tag">2022 – 2023</span></div></div>
-      <div class="exp-card reveal-left" style="transition-delay:0.15s"><div class="exp-number">02</div><div class="exp-content"><h3>Nama Pengalaman Kedua</h3><p>Deskripsi singkat pengalaman kamu di sini. Ceritakan apa yang kamu lakukan dan apa yang kamu pelajari dari pengalaman ini.</p><span class="exp-tag">2023 – 2024</span></div></div>
-      <div class="exp-card reveal-left" style="transition-delay:0.3s"><div class="exp-number">03</div><div class="exp-content"><h3>Nama Pengalaman Ketiga</h3><p>Deskripsi singkat pengalaman kamu di sini. Ceritakan apa yang kamu lakukan dan apa yang kamu pelajari dari pengalaman ini.</p><span class="exp-tag">2024 – Sekarang</span></div></div>
+      <div class="exp-card reveal-left"><div class="exp-number">01</div><div class="exp-content"><h3> Pengalaman Pertama</h3><p>Berorganisasi, memasuki hampir semua ekskul dan organisasi disekolah</p><span class="exp-tag">2024 – 2026</span></div></div>
+      <div class="exp-card reveal-left" style="transition-delay:0.15s"><div class="exp-number">02</div><div class="exp-content"><h3>Pengalaman Kedua</h3><p>Ketua Umum OSIS SMKN 2 Barru Purna Ketua English Club</p><span class="exp-tag">2024 – Sekarang</span></div></div>
+      <div class="exp-card reveal-left" style="transition-delay:0.3s"><div class="exp-number">03</div><div class="exp-content"><h3> Pengalaman Ketiga</h3><p>Koordinator Sekbid Umum PMR SMKN 2 Barru </p><span class="exp-tag">2024 – Sekarang</span></div></div>
     </div>
   </section>
 
-  <!-- HOBY -->
   <section id="hoby">
     <div class="reveal">
       <div class="section-title">Hobi</div>
       <div class="section-line"></div>
     </div>
     <div class="hoby-grid">
-      <div class="hoby-card reveal"><span class="hoby-icon">🏀</span><h3>Bola Basket</h3><p>Saya gemar bermain basket karena melatih kerja tim, ketangkasan, dan semangat kompetitif yang sehat dalam kehidupan sehari-hari.</p></div>
-      <div class="hoby-card reveal" style="transition-delay:0.15s"><span class="hoby-icon">🎮</span><h3>Gaming</h3><p>Gaming adalah cara saya melatih strategi, refleks, dan kemampuan berpikir cepat sambil menikmati waktu santai bersama teman.</p></div>
-      <div class="hoby-card reveal" style="transition-delay:0.3s"><span class="hoby-icon">🏥</span><h3>Palang Merah</h3><p>Aktif di kegiatan Palang Merah mengajarkan saya nilai kemanusiaan, pertolongan pertama, dan kepedulian terhadap sesama.</p></div>
+      <div class="hoby-card reveal"><span class="hoby-icon">🏀</span><h3>Bola Basket</h3><p>Bermain basket, pernah juara 3 tournament basket tingkat kabupaten.</p></div>
+      <div class="hoby-card reveal" style="transition-delay:0.15s"><span class="hoby-icon">🎮</span><h3>Gaming</h3><p>Bermain game, pernah juara 2 tournament free fire tingkat kabupaten</p></div>
+      <div class="hoby-card reveal" style="transition-delay:0.3s"><span class="hoby-icon">🏥</span><h3>Palang Merah</h3><p>Siswa aktif PMR Smkn 2 Barru & Anggota Forpis Kab.Barru</p></div>
     </div>
   </section>
 
-  <!-- CONTACT -->
   <section id="contact">
     <div class="reveal">
       <div class="section-title">Contact</div>
@@ -408,9 +409,9 @@
       <p class="contact-sub">Jangan ragu untuk menghubungi saya melalui platform berikut 👇</p>
     </div>
     <div class="contact-grid">
-      <a href="https://wa.me/628xxxxxxxxxx" target="_blank" class="contact-card wa reveal"><i class="fab fa-whatsapp"></i><span>WhatsApp</span><p>+62 8xx-xxxx-xxxx</p></a>
-      <a href="https://instagram.com/username_kamu" target="_blank" class="contact-card ig reveal" style="transition-delay:0.12s"><i class="fab fa-instagram"></i><span>Instagram</span><p>@username_kamu</p></a>
-      <a href="mailto:email@kamu.com" class="contact-card email reveal" style="transition-delay:0.24s"><i class="fas fa-envelope"></i><span>Email</span><p>email@kamu.com</p></a>
+      <a href="https://wa.me/6285705763209" target="_blank" class="contact-card wa reveal"><i class="fab fa-whatsapp"></i><span>WhatsApp</span><p>+62 8xx-xxxx-xxxx</p></a>
+      <a href="https://instagram.com/eyiballs" target="_blank" class="contact-card ig reveal" style="transition-delay:0.12s"><i class="fab fa-instagram"></i><span>Instagram</span><p>@eyiballs</p></a>
+      <a href="mailto:arsyanendraikbal25@gmail.com" class="contact-card email reveal" style="transition-delay:0.24s"><i class="fas fa-envelope"></i><span>Email</span><p>arsyanendraikbal25@gmail.com</p></a>
     </div>
   </section>
 
@@ -421,10 +422,22 @@
     const canvas = document.getElementById('starCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [], blobs = [];
+    let lastWidth = window.innerWidth; // Menyimpan lebar layar terakhir
 
-    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    function resize() { 
+      canvas.width = window.innerWidth; 
+      canvas.height = window.innerHeight; 
+    }
     resize();
-    window.addEventListener('resize', () => { resize(); initParticles(); });
+    
+    // PERBAIKAN: Debounce / filter event resize agar tidak re-init partikel jika hanya tinggi layar yang berubah (seperti kasus memunculkan/menyembunyikan bar navigasi hp)
+    window.addEventListener('resize', () => { 
+      if (window.innerWidth !== lastWidth) {
+        lastWidth = window.innerWidth;
+        resize(); 
+        initParticles(); 
+      }
+    });
 
     function initParticles() {
       particles = []; blobs = [];
@@ -443,7 +456,6 @@
             : `rgba(${180 + Math.floor(Math.random()*60)},${200 + Math.floor(Math.random()*40)},${255},1)`
         });
       }
-      // Soft glowing blobs for depth
       for (let i = 0; i < 6; i++) {
         blobs.push({
           x: Math.random() * canvas.width,
@@ -458,15 +470,14 @@
     initParticles();
 
     function drawBackground() {
-      // Very light base — near white with subtle blue tint
       const bg = ctx.createRadialGradient(
         canvas.width * 0.4, canvas.height * 0.35, 0,
         canvas.width * 0.5, canvas.height * 0.5, canvas.width * 0.9
       );
-      bg.addColorStop(0, '#f8faff');   // almost pure white at center
-      bg.addColorStop(0.4, '#f0f4ff'); // soft blue-white
-      bg.addColorStop(0.75, '#e8eeff'); // light periwinkle
-      bg.addColorStop(1, '#dde6ff');   // slightly deeper at edges
+      bg.addColorStop(0, '#f8faff');   
+      bg.addColorStop(0.4, '#f0f4ff'); 
+      bg.addColorStop(0.75, '#e8eeff'); 
+      bg.addColorStop(1, '#dde6ff');   
       ctx.fillStyle = bg;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
@@ -547,7 +558,7 @@
     allReveal.forEach(el => observer.observe(el));
 
     // ===== TYPING =====
-    const phrases = ['Nama Kamu','Seorang Pelajar','Seorang Pemuda','Anggota PMR'];
+    const phrases = ['Ikbal Kabil','Seorang Pelajar','Seorang Pemuda','Anggota PMR'];
     let pIdx=0, cIdx=0, deleting=false;
     const typedEl = document.getElementById('typedText');
     function typeEffect() {
